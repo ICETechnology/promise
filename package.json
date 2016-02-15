@@ -1,8 +1,30 @@
 {
-    "devDependencies": {
-        "promises-aplus-tests": "*"
-    },
-    "scripts": {
-        "test": "promises-aplus-tests test/testsAdapter.js"
-    }
+  "name": "promise",
+  "version": "0.2.1",
+  "description": "Promise js",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.21",
+    "karma-jasmine": "^0.3.7",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "phantomjs-prebuilt": "^2.1.4"
+  },
+  "scripts": {
+    "test": "karma start karma.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ICETechnology/promise.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ICETechnology/promise/issues"
+  },
+  "homepage": "https://github.com/ICETechnology/promise#readme"
 }
