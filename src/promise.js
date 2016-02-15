@@ -23,7 +23,7 @@
     if (isPromise(value) || isPseudoPromise(value)) {
       value.then(promise.fulfil.bind(promise), promise.reject.bind(promise));
     } else {
-      promise.fulfil(value);
+      promise.fulfil.apply(promise, [].slice.call(arguments, 1));
     }
   };
 
@@ -33,7 +33,7 @@
     var value;
     var i;
 
-    for (i=0;i<this.thenTargets.length;++i) {
+    for (i = 0; i < this.thenTargets.length; ++i) {
       if (this.fulfilled) {
         callback = this.thenTargets[i].onFulfilled;
         value = this.value;
@@ -44,13 +44,20 @@
       }
       try {
         if (callback && typeof callback === 'function') {
-          callbackResult = callback.apply(undefined, value);
+          callbackResult = callback.call(undefined, value);
         } else {
           callbackResult = this;
         }
-        this.resolve(this.thenTargets[i], callbackResult);
-      }
-      catch(err) {
+
+        if (this.fulfilled) {
+          this.resolve(this.thenTargets[i], callbackResult);
+        }
+
+        if (this.rejected) {
+          this.thenTargets[i].reject(callbackResult);
+        }
+
+      } catch (err) {
         this.thenTargets[i].reject(err);
       }
     }
@@ -69,11 +76,11 @@
     thenResult.onFulfilled = onFulfilled;
     thenResult.onRejected = onRejected;
     this.thenTargets.push(thenResult);
-    setTimeout(this.handleThen.bind(this),0);
+    setTimeout(this.handleThen.bind(this), 0);
     return thenResult;
   };
 
-  Promise.prototype.fulfil = Promise.prototype.fulfill = function() {
+  Promise.prototype.fulfil = Promise.prototype.fulfill = function(value) {
     var i;
     var linkedPromise;
     if (this.rejected) {
@@ -81,11 +88,11 @@
     }
     this.fulfilled = true;
     this.pending = false;
-    this.value = arguments;
+    this.value = value;
     this.handleThenTargets();
   };
 
-  Promise.prototype.reject = function() {
+  Promise.prototype.reject = function(value) {
     var i;
     var linkedPromise;
     if (this.fulfilled) {
@@ -93,7 +100,7 @@
     }
     this.rejected = true;
     this.pending = false;
-    this.reason = arguments;
+    this.reason = value;
     this.handleThenTargets();
   };
 
