@@ -16,6 +16,10 @@ describe('Basic Test', function() {
   it('should have reject function', function() {
     expect(promise.reject).toBeFunction();
   });
+
+  it('should have abort function', function() {
+    expect(promise.abort).toBeFunction();
+  });
 });
 
 describe('initial state test', function() {
@@ -194,3 +198,25 @@ describe('reject then chain test', function() {
   });
 
 });
+
+describe('abort test', function() {
+  var promise = new Promise();
+  promise.abort();
+
+  it('fulfilled should be true', function() {
+    expect(promise.fulfilled).toBeFalsy();
+  });
+
+  it('pending should be false', function() {
+    expect(promise.pending).toBeFalse();
+  });
+
+  it('rejected should be falsy', function() {
+    expect(promise.rejected).toBeTrue();
+  });
+
+  it('resolve value should be equal to argument', function() {
+    expect(promise.reason).toEqual('abort');
+  });
+});
+
