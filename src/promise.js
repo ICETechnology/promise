@@ -104,6 +104,10 @@
     this.handleThenTargets();
   };
 
+  Promise.prototype.abort = function() {
+    this.reject('abort');
+  };
+
   this.Promise = Promise;
 
 }).call(this);
